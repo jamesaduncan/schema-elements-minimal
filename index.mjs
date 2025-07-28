@@ -114,13 +114,17 @@ function extractProperty( doc, prop ) {
 
 /*
     Extract microdata from HTML.
+    Takes an HTML string and an optional limiter array.
     Returns an array of objects, each representing an item with its properties.
 */
-export function microdata( html ) {
+export function microdata( html, limiter = []) {
     const doc = cheerio.load( html );
     const results = [];
 
-    doc( '[itemscope]' ).each( ( i, el ) => {
+    const selector =  limiter.join("") + '[itemscope]';
+   
+
+    doc( selector ).each( ( i, el ) => {
         const item = doc( el );
         const obj = {};
         if ( item.attr('itemtype') ) {

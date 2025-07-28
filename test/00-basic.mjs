@@ -163,3 +163,16 @@ t.test("microdata gets a sensible item id when there is none", ( t ) => {
     t.equal( results[0]['@id'], "#foo", "get post magic id from element id");
     t.end();
 });
+
+t.test("microdata with a limiting selector", ( t ) => {
+    const results = microdata(`<article id="foo" itemscope itemtype="http://schema.org/BlogPosting">   
+        <h1 itemprop="headline">My Blog Post</h1>
+    </article>
+    <article itemscope itemtype="http://schema.org/BlogPosting">   
+        <h1 itemprop="headline">Non-Authoritative Blog post!</h1>
+    </article>    
+    `, [ '[id]' ]); 
+    t.ok( Array.isArray( results ), "got an array of results from microdata with itemref");
+    t.equal( results.length, 1 , "got one item from microdata with limiting selector");
+    t.end();
+})
