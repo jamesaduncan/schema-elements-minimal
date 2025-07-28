@@ -9,7 +9,7 @@
   "license": "ISC",
   "author": "James A. Duncan <james@stance.global>",
   "type": "module",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
     "test": "tap"
   },
