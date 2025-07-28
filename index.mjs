@@ -47,6 +47,21 @@ function extractThing( doc, el, obj ) {
         obj["@id"] = doc( el ).attr('itemid').trim();
     }
 
+    if (!doc( el ).attr('itemid') && doc(el).attr('id')) {
+        Object.defineProperty( obj, "@id", {
+            get: (target, prop, receiver ) => {
+                const propval = `#${doc( el ).attr('id')}`;
+                Object.defineProperty( obj, "@id", {
+                    value: propval,
+                    enumerable: true
+                })
+                return propval;
+            },
+            configurable: true,
+            enumerble: false
+        })
+    }
+
     if ( doc( el ).attr('itemref') ) {
         // If the element has an "itemref" attribute, extract properties from referenced elements
         const refs = doc( el ).attr('itemref').split(/\s+/);

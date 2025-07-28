@@ -51,6 +51,7 @@ t.test("microdata with nested items", (t) => {
     t.equal( results[0].author.name, "John Doe", "got the correct author name from microdata");
     t.equal( results[0]['@type'], "BlogPosting", "got the correct type for blog post");
     t.equal( results[0]['@context'], "http://schema.org/", "got the correct context for blog post");
+        console.log( results )
     t.end();
 });
 
@@ -152,4 +153,13 @@ t.test("microdata extracts id sensibly", ( t ) => {
     t.ok( Array.isArray( results ), "got an array of results from microdata with itemref");
     t.equal( results[0]['@id'], "#post-id", "get post id from itemid");
     t.end();
-})
+});
+
+t.test("microdata gets a sensible item id when there is none", ( t ) => {
+    const results = microdata(`<article id="foo" itemscope itemtype="http://schema.org/BlogPosting">   
+        <h1 itemprop="headline">My Blog Post</h1>
+    </article>`);
+    t.ok( Array.isArray( results ), "got an array of results from microdata with itemref");
+    t.equal( results[0]['@id'], "#foo", "get post magic id from element id");
+    t.end();
+});
