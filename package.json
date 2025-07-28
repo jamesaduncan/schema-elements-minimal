@@ -11,12 +11,14 @@
   "type": "module",
   "main": "index.mjs",
   "scripts": {
-    "test": "tap"
+    "test": "tap",
+    "build:docs": "npx jsdoc -c jsdoc.json"
   },
   "dependencies": {
     "cheerio": "^1.1.2"
   },
   "devDependencies": {
-    "tap": "^21.1.0"
+    "tap": "^21.1.0",
+    "jsdoc": "^4.0.0"
   }
 }

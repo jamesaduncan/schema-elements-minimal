@@ -1,0 +1,13 @@
+
+{
+  "source": {
+    "include": ["./index.mjs"],
+    "includePattern": ".+\\.mjs$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+    "destination": "./docs",
+    "recurse": true,
+    "template": "templates/default"
+  }
+}
