@@ -1,0 +1,23 @@
+{
+  "name": "microdata",
+  "version": "1.0.0",
+  "description": "Simple microdata access",
+  "keywords": [
+    "HTML5",
+    "microdata",
+    "Schema.org"
+  ],
+  "license": "ISC",
+  "author": "James A. Duncan <james@stance.global>",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap"
+  },
+  "dependencies": {
+    "cheerio": "^1.1.2"
+  },
+  "devDependencies": {
+    "tap": "^21.1.0"
+  }
+}
