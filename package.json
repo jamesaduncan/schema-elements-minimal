@@ -4,8 +4,7 @@
   "description": "Simple microdata access",
   "keywords": [
     "HTML5",
-    "microdata",
-    "Schema.org"
+    "microdata"
   ],
   "license": "ISC",
   "author": "James A. Duncan <james@stance.global>",
