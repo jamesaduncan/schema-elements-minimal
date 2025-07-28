@@ -1,6 +1,6 @@
-# Microdata Library
+# Microdata Minimal
 
-Microdata Library is a lightweight JavaScript library for working with microdata in HTML documents. It provides simple extractraction of structured data from web pages.
+Microdata-Minimal is a lightweight JavaScript library for working with microdata in HTML documents. It provides simple extractraction of structured data from web pages for node.js
 
 ## Installation
 
