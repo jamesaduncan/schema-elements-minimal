@@ -40,14 +40,14 @@ console.log(data);
 
 ## API
 
-### `microdata(html: string): object`
+### `microdata(html: string): Array`
 
 Parses an HTML string containing microdata and returns a structured JavaScript object.
 
 - **Parameters**:
     - `html` (string): The HTML string to parse.
 - **Returns**:
-    - A JavaScript object representing the structured data.
+    - A JavaScript array with a list of all the microdata objects
 
 ## Testing
 
