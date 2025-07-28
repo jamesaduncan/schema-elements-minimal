@@ -144,3 +144,12 @@ t.test("microdata with itemref to individual prop", ( t ) => {
     t.equal( results[0].headline, "My Blog Post", "itemref to individual prop worked");
     t.end();
 })
+
+t.test("microdata extracts id sensibly", ( t ) => {
+    const results = microdata(`<article id="foo" itemscope itemtype="http://schema.org/BlogPosting"  itemid="#post-id">   
+        <h1 itemprop="headline">My Blog Post</h1>
+    </article>`);
+    t.ok( Array.isArray( results ), "got an array of results from microdata with itemref");
+    t.equal( results[0]['@id'], "#post-id", "get post id from itemid");
+    t.end();
+})

@@ -33,10 +33,18 @@ function injectProp( obj, prop, value ) {
     Returns an object with the properties defined by the "itemprop" attributes.
 */
 function extractThing( doc, el, obj ) {    
+    /*
+        Get the properties of the thing, but only those that aren't below another itemscope.
+        This is to avoid duplicating properties from nested items.
+    */
     for ( const prop of doc( "[itemprop]:not(* [itemscope] [itemprop])", el )) {
         const item = doc( prop );
         const propname = item.attr('itemprop');
         injectProp( obj, propname, extractProperty( doc, prop ));
+    }
+
+    if ( doc( el ).attr('itemid') ) {
+        obj["@id"] = doc( el ).attr('itemid').trim();
     }
 
     if ( doc( el ).attr('itemref') ) {
