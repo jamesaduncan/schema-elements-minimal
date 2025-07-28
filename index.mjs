@@ -14,6 +14,19 @@ function ldifyUrl( url ) {
     return {};
 }
 
+/* Make sure we do a array or becomes an array style property gathering */
+function injectProp( obj, prop, value ) {
+    if ( obj[prop] ) {
+        if ( Array.isArray( obj[prop] ) ) {
+            obj[prop].push( value );
+        } else {
+            obj[prop] = [ obj[prop], value ];
+        }
+    } else {
+        obj[prop] = value;
+    }
+}
+
 /*
     Extract the microdata from an element and its children.
     The element must have the "itemscope" attribute.
@@ -23,15 +36,18 @@ function extractThing( doc, el, obj ) {
     for ( const prop of doc( "[itemprop]:not(* [itemscope] [itemprop])", el )) {
         const item = doc( prop );
         const propname = item.attr('itemprop');
+        injectProp( obj, propname, extractProperty( doc, prop ));
+    }
 
-        if ( obj[propname] ) {
-            if ( obj[ propname ] && Array.isArray( obj[ propname ] ) ) {
-                obj[propname].push( extractProperty( doc, prop ) );
-            } else {
-                obj[ propname ] = [ obj[ propname ], extractProperty( doc, prop ) ];
-            }
-        } else {
-            obj[ propname ] = extractProperty( doc, prop );
+    if ( doc( el ).attr('itemref') ) {
+        // If the element has an "itemref" attribute, extract properties from referenced elements
+        const refs = doc( el ).attr('itemref').split(/\s+/);
+        for ( const ref of refs ) {
+            // Each ref is an ID of an element in the document
+            doc( `#${ref}` ).each( ( i, refEl ) => {
+                const propname = doc( refEl ).attr('itemprop');
+                injectProp( obj, propname, extractProperty( doc, refEl ));
+            });
         }
     }
 
@@ -57,6 +73,7 @@ function extractProperty( doc, prop ) {
                 return item.attr('value').trim() || '';
             default:
                 return item.text().trim();
+            /* ... there are more of these to support ... */
         }
     }
 }

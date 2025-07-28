@@ -93,3 +93,54 @@ t.test("fancytags", ( t ) => {
     t.equal( results[0].age, "30", "got the correct age from microdata with fancy tags");
     t.end();
 });
+
+t.test("microdata with itemref", (t) => {
+    const results = microdata(`<article itemref="a" itemscope itemtype="http://schema.org/BlogPosting">
+        <h1 itemprop="headline">My Blog Post</h1>
+        <div itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span itemprop="name">John Doe</span>
+        </div>
+        <ul>
+            <li itemprop="comment" itemscope itemtype="http://schema.org/Comment">
+                <span itemprop="text">Great post!</span>
+                <div itemprop="author" itemscope itemtype="http://schema.org/Person">
+                    <span itemprop="name">Jane Smith</span>
+                </div>
+            </li>
+        </ul>
+    </article>
+    <div id="a" itemscope itemprop="editor" itemtype="http://schema.org/Person">
+        <span itemprop="name">Brian</span>
+    </div>`);
+    t.ok( Array.isArray( results ), "got an array of results from microdata with itemref");
+    console.log( results );
+    t.equal( results[0].editor.name, "Brian", "got the correct editor name from microdata with itemref");
+    t.end();
+} );
+
+t.test("microdata with multiple itemrefs", ( t ) => {
+    const results = microdata(`<article itemref="a b" itemscope itemtype="http://schema.org/BlogPosting">
+        <h1 itemprop="headline">My Blog Post</h1>
+    </article>
+    <ul>
+        <li id="a" itemscope itemprop="comment" itemtype="http://schema.org/Comment">
+            <span itemprop="text">Good post!</span>
+        </li>
+        <li id="a" itemscope itemprop="comment" itemtype="http://schema.org/Comment">
+            <span itemprop="text">Bad post!</span>
+        </li>
+    </ul>`);
+    t.ok( Array.isArray( results ), "got an array of results from microdata with itemref");
+    t.equal( results[0].comment[0].text, "Good post!", "multi itemref worked for first comment");
+    t.equal( results[0].comment[1].text, "Bad post!", "multi itemref worked for first comment");
+    t.end();
+});
+
+t.test("microdata with itemref to individual prop", ( t ) => {
+    const results = microdata(`<article itemref="a" itemscope itemtype="http://schema.org/BlogPosting">   
+    </article>
+    <h1 id="a" itemprop="headline">My Blog Post</h1>`);
+    t.ok( Array.isArray( results ), "got an array of results from microdata with itemref");
+    t.equal( results[0].headline, "My Blog Post", "itemref to individual prop worked");
+    t.end();
+})
