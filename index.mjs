@@ -53,6 +53,8 @@ function extractProperty( doc, prop ) {
                 return item.attr('content').trim() || '';
             case 'link':
                 return item.attr('href').trim() || '';
+            case 'input':
+                return item.attr('value').trim() || '';
             default:
                 return item.text().trim();
         }
