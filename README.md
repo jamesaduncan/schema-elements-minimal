@@ -40,14 +40,23 @@ console.log(data);
 
 ## API
 
-### `microdata(html: string): Array`
+### microdata
 
-Parses an HTML string containing microdata and returns a structured JavaScript object.
+Extract microdata from HTML.
+Takes an HTML string and optionally, either an array with a list of selectors that
+limits the selection, or an options object that can contain a limiter property that does the same.
+The options object can also contain a base property to help fully qualify relative URLs.
+Returns an array of objects, each representing an item with its properties.
 
-- **Parameters**:
-    - `html` (string): The HTML string to parse.
-- **Returns**:
-    - A JavaScript array with a list of all the microdata objects
+#### Parameters
+
+*   `html` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The HTML string to parse.
+*   `options` **([Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object) | [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array))?** Optional settings or limiter array.
+
+    *   `options.limiter` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)?** Array of selectors to limit the scope.
+    *   `options.base` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Base URL for resolving relative URLs.
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)<[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** An array of extracted microdata objects.
 
 ## Testing
 

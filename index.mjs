@@ -120,6 +120,8 @@ function extractProperty( doc, prop ) {
                 return item.attr('href').trim() || '';
             case 'input':
                 return item.attr('value').trim() || '';
+            case 'select':
+                return item.find('[selected]').text().trim() || '';
             default:
                 return item.text().trim();
             /* ... there are more of these to support ... */

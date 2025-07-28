@@ -219,4 +219,18 @@ t.test("microdata with a limiting selector and NO base uri where the base uri is
     t.equal( results.length, 1 , "got one item from microdata with limiting selector");
     t.equal( results[0]['@id'], "http://www.foo.com/#foo", "got the correct fully qualified url for the item id");
     t.end();
-})
+});
+
+t.test("microdata with a stupid select box", ( t ) => {
+    const results = microdata(`<div itemscope itemtype="http://schema.org/Person">
+        <select itemprop="name">
+            <option value="John Doe" selected>John Doe</option>
+            <option value="Jane Smith">Jane Smith</option>
+        </select    
+    </div>`);
+    t.ok( Array.isArray( results ), "got an array of results from microdata with select box");
+    t.ok( results.length > 0, "got some results from microdata with select box");
+    t.equal( results[0].name, "John Doe", "got the correct name from microdata with select box");
+    t.end();
+        console.log( results );
+});

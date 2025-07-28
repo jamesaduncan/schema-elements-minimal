@@ -1,13 +1,13 @@
 {
-  "name": "microdata",
-  "version": "1.0.0",
-  "description": "Simple microdata access",
+  "name": "microdata-minimal",
+  "version": "1.0.1",
+  "description": "A simple library to get HTML5 microdata in a structured way",
   "keywords": [
     "HTML5",
     "microdata"
   ],
   "license": "ISC",
-  "author": "James A. Duncan <james@stance.global>",
+  "author": "James A. Duncan <james@kinburnstreet.consulting>",
   "type": "module",
   "main": "index.mjs",
   "scripts": {
@@ -18,7 +18,8 @@
     "cheerio": "^1.1.2"
   },
   "devDependencies": {
-    "tap": "^21.1.0",
-    "jsdoc": "^4.0.0"
+    "documentation": "^14.0.3",
+    "jsdoc": "^4.0.0",
+    "tap": "^21.1.0"
   }
 }
