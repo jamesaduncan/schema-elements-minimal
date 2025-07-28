@@ -1,20 +1,27 @@
 import * as cheerio from 'cheerio';
 
-/*
-    Convert a schema URL to a type & context.
-    For example, "http://schema.org/Person" becomes:
-    {
-        "@type": "Person",
-        "@context": "http://schema.org/"
-    }
-*/
+/**
+ * Convert a schema URL to a type & context.
+ * For example, "http://schema.org/Person" becomes:
+ * {
+ *     "@type": "Person",
+ *     "@context": "http://schema.org/"
+ * }
+ * @param {string} url - The schema URL to convert.
+ * @returns {Object} An object containing "@type" and "@context".
+ */
 function ldifyUrl( url ) {
     const match = url.match(/^(.+\/)([^\/]+$)/);
     if ( match ) return { "@type": match[2], "@context": match[1] };
     return {};
 }
 
-/* Make sure we do a array or becomes an array style property gathering */
+/**
+ * Ensure a property is added to an object as an array or a single value.
+ * @param {Object} obj - The target object.
+ * @param {string} prop - The property name.
+ * @param {*} value - The value to inject.
+ */
 function injectProp( obj, prop, value ) {
     if ( obj[prop] ) {
         if ( Array.isArray( obj[prop] ) ) {
@@ -27,11 +34,15 @@ function injectProp( obj, prop, value ) {
     }
 }
 
-/*
-    Extract the microdata from an element and its children.
-    The element must have the "itemscope" attribute.
-    Returns an object with the properties defined by the "itemprop" attributes.
-*/
+/**
+ * Extract the microdata from an element and its children.
+ * The element must have the "itemscope" attribute.
+ * Returns an object with the properties defined by the "itemprop" attributes.
+ * @param {Object} doc - The Cheerio document object.
+ * @param {Object} el - The element to extract data from.
+ * @param {Object} obj - The object to populate with extracted data.
+ * @returns {Object} The populated object.
+ */
 function extractThing( doc, el, obj ) {    
     /*
         Get the properties of the thing, but only those that aren't below another itemscope.
@@ -61,7 +72,8 @@ function extractThing( doc, el, obj ) {
     if (!doc( el ).attr('itemid') && doc(el).attr('id')) {
         Object.defineProperty( obj, "@id", {
             get: (target, prop, receiver ) => {
-                const propval = `#${doc( el ).attr('id')}`;
+                const base = doc('base').attr('href') || '';
+                const propval = `${base}#${doc( el ).attr('id')}`;
                 Object.defineProperty( obj, "@id", {
                     value: propval,
                     enumerable: true
@@ -88,11 +100,14 @@ function extractThing( doc, el, obj ) {
     return obj;
 } 
 
-/*
-    Extract the value of a property from an element.
-    If the element has an "itemtype" attribute, it is treated as a nested item.
-    Otherwise, it returns the text content of the element.
-*/
+/**
+ * Extract the value of a property from an element.
+ * If the element has an "itemtype" attribute, it is treated as a nested item.
+ * Otherwise, it returns the text content of the element.
+ * @param {Object} doc - The Cheerio document object.
+ * @param {Object} prop - The property element to extract data from.
+ * @returns {*} The extracted property value.
+ */
 function extractProperty( doc, prop ) {
     const item = doc( prop );
     if ( item.attr('itemtype') ) {
@@ -112,18 +127,34 @@ function extractProperty( doc, prop ) {
     }
 }
 
-/*
-    Extract microdata from HTML.
-    Takes an HTML string and an optional limiter array.
-    Returns an array of objects, each representing an item with its properties.
-*/
-export function microdata( html, limiter = []) {
+/**
+ * Extract microdata from HTML.
+ * Takes an HTML string and optionally, either an array with a list of selectors that
+ *  limits the selection, or an options object that can contain a limiter property that does the same.
+ * The options object can also contain a base property to help fully qualify relative URLs.
+ * Returns an array of objects, each representing an item with its properties.
+ * @param {string} html - The HTML string to parse.
+ * @param {Object|Array} [options] - Optional settings or limiter array.
+ * @param {Array} [options.limiter] - Array of selectors to limit the scope.
+ * @param {string} [options.base] - Base URL for resolving relative URLs.
+ * @returns {Array<Object>} An array of extracted microdata objects.
+ */
+export function microdata( html, options ) {
+    const limiter = ( options && options.limiter ) ? options.limiter : Array.isArray( options ) ? options : [];
+    const base    = ( options && options.base ) ? options.base : "";
+
     const doc = cheerio.load( html );
     const results = [];
 
+    if ( base ) {
+        if ( doc('base') ) {
+            doc('base').remove();
+        }
+        doc(`<base href="${base}">`).prependTo('body');
+    }
+
     const selector =  limiter.join("") + '[itemscope]';
    
-
     doc( selector ).each( ( i, el ) => {
         const item = doc( el );
         const obj = {};

@@ -176,3 +176,47 @@ t.test("microdata with a limiting selector", ( t ) => {
     t.equal( results.length, 1 , "got one item from microdata with limiting selector");
     t.end();
 })
+
+t.test("microdata with a limiting selector and base uri", ( t ) => {
+    const results = microdata(`<article id="foo" itemscope itemtype="http://schema.org/BlogPosting">   
+        <h1 itemprop="headline">My Blog Post</h1>
+    </article>
+    <article itemscope itemtype="http://schema.org/BlogPosting">   
+        <h1 itemprop="headline">Non-Authoritative Blog post!</h1>
+    </article>    
+    `, { limiter: [ '[id]' ], base: "http://example.com/"}); 
+    t.ok( Array.isArray( results ), "got an array of results from microdata with itemref");
+    t.equal( results.length, 1 , "got one item from microdata with limiting selector");
+    t.equal( results[0]['@id'], "http://example.com/#foo", "got the correct fully qualified url for the item id");
+    t.end();
+})
+
+t.test("microdata with a limiting selector and base uri where the base uri is already set", ( t ) => {
+    const results = microdata(`<base href="http://www.foo.com/">
+    <article id="foo" itemscope itemtype="http://schema.org/BlogPosting">   
+        <h1 itemprop="headline">My Blog Post</h1>
+    </article>
+    <article itemscope itemtype="http://schema.org/BlogPosting">   
+        <h1 itemprop="headline">Non-Authoritative Blog post!</h1>
+    </article>    
+    `, { limiter: [ '[id]' ], base: "http://example.com/"}); 
+    t.ok( Array.isArray( results ), "got an array of results from microdata with itemref");
+    t.equal( results.length, 1 , "got one item from microdata with limiting selector");
+    t.equal( results[0]['@id'], "http://example.com/#foo", "got the correct fully qualified url for the item id");
+    t.end();
+})
+
+t.test("microdata with a limiting selector and NO base uri where the base uri is already set", ( t ) => {
+    const results = microdata(`<base href="http://www.foo.com/">
+    <article id="foo" itemscope itemtype="http://schema.org/BlogPosting">   
+        <h1 itemprop="headline">My Blog Post</h1>
+    </article>
+    <article itemscope itemtype="http://schema.org/BlogPosting">   
+        <h1 itemprop="headline">Non-Authoritative Blog post!</h1>
+    </article>    
+    `, { limiter: [ '[id]' ] }); 
+    t.ok( Array.isArray( results ), "got an array of results from microdata with itemref");
+    t.equal( results.length, 1 , "got one item from microdata with limiting selector");
+    t.equal( results[0]['@id'], "http://www.foo.com/#foo", "got the correct fully qualified url for the item id");
+    t.end();
+})
