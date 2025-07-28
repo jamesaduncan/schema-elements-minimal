@@ -83,11 +83,13 @@ t.test("fancytags", ( t ) => {
     const results = microdata(`<div itemscope itemtype="http://schema.org/Person">
         <meta itemprop="name" content="John Doe">
         <link itemprop="url" href="http://example.com/johndoe">
+        <input itemprop="age" value="30" name="foo">
     </div>`);
     t.ok( results, "got results from microdata with fancy tags");
     t.ok( Array.isArray( results ), "got an array of results from microdata");
     t.ok( results.length > 0, "got some results from microdata with fancy tags");
     t.equal( results[0].name, "John Doe", "got the correct name from microdata with fancy tags");
     t.equal( results[0].url, "http://example.com/johndoe", "got the correct URL from microdata with fancy tags");
+    t.equal( results[0].age, "30", "got the correct age from microdata with fancy tags");
     t.end();
 });
