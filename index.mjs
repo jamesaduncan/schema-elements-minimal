@@ -43,10 +43,21 @@ function extractThing( doc, el, obj ) {
         injectProp( obj, propname, extractProperty( doc, prop ));
     }
 
+    /*
+        If we have an itemid, then we use it to set the @id
+        property of the JSON-LD object.
+    */
     if ( doc( el ).attr('itemid') ) {
         obj["@id"] = doc( el ).attr('itemid').trim();
     }
 
+    /*
+        If we have an id attr on the element, set a magical
+        @id property, that upon obversation will return the
+        property, and set it as a value. This is because
+        HTML/microdata itemid and ids are only sort of the same
+        thing, sometimes.
+    */
     if (!doc( el ).attr('itemid') && doc(el).attr('id')) {
         Object.defineProperty( obj, "@id", {
             get: (target, prop, receiver ) => {
