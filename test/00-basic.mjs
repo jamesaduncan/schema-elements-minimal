@@ -234,3 +234,13 @@ t.test("microdata with a stupid select box", ( t ) => {
     t.end();
         console.log( results );
 });
+
+t.test("microdata with JSON-LD script", ( t ) => {
+    const results = microdata(`<script type="application/json" itemscope itemtype="http://schema.org/Person">
+        { "name": "John Doe", "age": "30" }
+    </script>`);
+    t.ok( Array.isArray( results ), "got an array of results from microdata with JSON-LD script");
+    t.ok( results.length > 0, "got some results from microdata with JSON-LD script");
+    t.equal( results[0].name, "John Doe", "got the correct name from microdata with JSON-LD script");
+    t.end();
+});

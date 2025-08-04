@@ -44,6 +44,18 @@ function injectProp( obj, prop, value ) {
  * @returns {Object} The populated object.
  */
 function extractThing( doc, el, obj ) {    
+    if ( el.tagName.toLowerCase() == 'script' && doc( el ).attr('type') === 'application/json') {
+        try {
+            const json = JSON.parse(doc( el ).text());
+            if (json && json instanceof Object) {
+                Object.assign(obj, json);
+            }
+        } catch (e) {
+            console.error(`Error parsing JSON-LD script:`, e);
+        }
+        return obj;
+    }
+
     /*
         Get the properties of the thing, but only those that aren't below another itemscope.
         This is to avoid duplicating properties from nested items.
